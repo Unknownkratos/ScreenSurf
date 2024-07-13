@@ -1,20 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const userRoutes = require('./routes/user');
 const signupRoutes = require('./routes/signup');
 const loginRoutes = require('./routes/login');
-
-const path = require('path'); // Import path module for file path operations
+const homeRoutes = require('./routes/home');
+const path = require('path');
 
 const app = express();
 
-// Middleware to parse JSON
+// Middleware to parse JSON and URL-encoded data
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Set the view engine to Pug
 app.set('view engine', 'pug');
-
-// Set the directory where your views (Pug files) are located
 app.set('views', path.join(__dirname, 'views'));
 
 // MongoDB connection
@@ -27,10 +25,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/ScreenSurf', {
   console.error('Could not connect to MongoDB', err);
 });
 
-// Define your routes
-app.use('/user', userRoutes);
+// Define routes
 app.use('/signup', signupRoutes);
 app.use('/login', loginRoutes);
+app.use('/home', homeRoutes);
 
 // Default route
 app.get('/', (req, res) => {
