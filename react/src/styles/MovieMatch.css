@@ -1,114 +1,146 @@
-/* src/styles/Moviematch.css */
+/* src/MovieMatch.css */
 
-.moviematch {
-    font-family: Arial, sans-serif;
-    background-color: #2c2c2c;
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .moviematch-header {
-    padding: 20px;
-    background-color: #001f3f;
-    text-align: center;
-  }
-  
-  .moviematch-main {
-    padding: 20px;
-  }
-  
-  .moviematch-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .form-section {
-    margin-bottom: 20px;
-  }
-  
-  .movie-list, .actor-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-  
-  .movie-item, .actor-item {
-    width: 180px;
-    background-color: #333;
-    border-radius: 10px;
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .movie-item.selected, .actor-item.selected {
-    background-color: #0074D9;
-  }
-  
-  .movie-item img, .actor-item img {
-    width: 100%;
-    border-radius: 5px;
-  }
-  
-  .movie-item h3, .actor-item h3 {
-    font-size: 16px;
-    margin: 10px 0 0;
-  }
-  
-  .actor-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  select {
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #0074D9;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:disabled {
-    background-color: #005bb5;
-    cursor: not-allowed;
-  }
-  
-  button:hover:not(:disabled) {
-    background-color: #005bb5;
-  }
-  
-  .recommendations {
-    margin-top: 20px;
-  }
-  
-  .recommendation-item {
-    background-color: #333;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
-  }
-  
-  .recommendation-item img {
-    width: 100%;
-    border-radius: 5px;
-  }
-  
-  .recommendation-item h3 {
-    font-size: 18px;
-    margin-top: 10px;
-  }
-  
-  .recommendation-item p {
-    font-size: 14px;
-  }
-  
+/* Container for movie cards */
+.movie-match-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #121212;
+  color: white;
+  height: 100vh;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Title styling */
+h2 {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  font-weight: 300;
+  color: #888;
+}
+
+/* Styling for each movie card */
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Movie poster styling */
+.movie-card img {
+  width: 200px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+/* Scale movie poster on hover */
+.movie-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Movie title styling */
+.movie-card h3 {
+  margin: 10px 0 5px;
+}
+
+/* Movie description styling */
+.movie-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* Container for rating buttons */
+.rating-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Styling for rating buttons */
+.rating-button {
+  width: 60px; /* Adjust size as needed */
+  height: 60px; /* Adjust size as needed */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 0.8em;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.awful {
+  background-color: #ff4c4c;
+}
+
+.meh {
+  background-color: #b0b0b0;
+}
+
+.good {
+  background-color: #ffd700;
+}
+
+.amazing {
+  background-color: #ffa500;
+}
+
+/* Hover effect for rating buttons */
+.rating-button:hover {
+  transform: scale(1.1);
+}
+
+/* Styling for "Haven't Seen" button */
+.havenotseen-button {
+  width: 60px; /* Adjust size as needed */
+  height: 60px; /* Adjust size as needed */
+  border-radius: 50%;
+  background-color: #444;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect for "Haven't Seen" button */
+.havenotseen-button:hover {
+  transform: scale(1.1);
+}
+
+/* Animation classes for movie items */
+.movie-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.movie-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.movie-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.movie-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
