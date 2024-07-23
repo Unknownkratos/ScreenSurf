@@ -1,7 +1,7 @@
 // src/pages/Login.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import FormInput from 'react/src/Components/FormInput.jsx';
+import FormInput from '../Components/FormInput.jsx';
 
 const Login = () => {
   const [email, setEmail] = useState('');

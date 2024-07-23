@@ -1,0 +1,220 @@
+/* src/styles/Home.css */
+
+/* Reset default margin and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: #2c2c2c;
+}
+
+.home {
+  font-family: Arial, sans-serif;
+  background-color: #2c2c2c;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #001f3f;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #7FDBFF; /* Light blue color similar to the logo */
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+}
+
+.nav-menu a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+.nav-menu a:hover {
+  color: #7FDBFF;
+}
+
+.user-profile a {
+  margin-left: 15px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.user-profile a:hover {
+  color: #7FDBFF;
+}
+
+.hero-banner {
+  position: relative;
+  height: 400px;
+  background: url('../images/hero-background.png') no-repeat center center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.hero-content .welcome-message {
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.hero-content .subtitle {
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.search-bar input {
+  padding: 10px;
+  font-size: 16px;
+  width: 400px;
+  border: none;
+  border-radius: 20px 0 0 20px;
+  outline: none;
+}
+
+.search-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #0074D9;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 0 20px 20px 0;
+}
+
+.trending-section {
+  padding: 20px;
+  width: 100%;
+}
+
+.trending-section h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.trending-carousel {
+  display: flex;
+  gap: 15px; /* Adjusted gap between movie items */
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scroll-snap-type: x mandatory; /* Ensures a smooth scroll experience */
+}
+
+.movie-item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 180px; /* Increased width of movie panel */
+  background-color: #333; /* Dark background for movie panels */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+  padding: 15px; /* Increased padding inside movie panel */
+  margin-right: 15px; /* Adjusted space between items */
+  scroll-snap-align: start; /* Align items at the start of the container */
+  overflow: hidden; /* Ensure children do not overflow the panel */
+}
+
+.movie-item img {
+  width: 100%; /* Make image responsive to container width */
+  height: auto;
+  border-radius: 5px; /* Rounded corners for images */
+}
+
+.movie-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px; /* Increased space between image and text */
+  overflow-wrap: break-word; /* Ensure long words wrap within container */
+}
+
+.movie-info h3 {
+  font-size: 16px; /* Increased font size for titles */
+  margin: 5px 0;
+  white-space: normal; /* Allow text to wrap */
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Show ellipsis for overflowing text */
+  width: 100%; /* Ensure it fits within the parent container */
+}
+
+.movie-info p {
+  font-size: 14px; /* Increased font size for ratings */
+  margin: 0;
+  white-space: normal; /* Allow text to wrap */
+  overflow-wrap: break-word; /* Break long words to fit container */
+  width: 100%; /* Ensure it fits within the parent container */
+}
+
+.footer {
+  padding: 20px;
+  background-color: #001f3f;
+  color: #fff;
+  text-align: center;
+  width: 100%;
+}
+
+.quick-links, .social-media-icons {
+  margin: 10px 0;
+}
+
+.quick-links a, .social-media-icons a {
+  margin: 0 10px;
+  color: #7FDBFF;
+  text-decoration: none;
+}
+
+.quick-links a:hover, .social-media-icons a:hover {
+  text-decoration: underline;
+}
+
+.newsletter-signup {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.newsletter-signup input {
+  padding: 10px;
+  border-radius: 5px 0 0 5px;
+  border: none;
+  outline: none;
+}
+
+.newsletter-signup button {
+  padding: 10px 20px;
+  background-color: #0074D9;
+  color: #fff;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
