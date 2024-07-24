@@ -1,24 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../styles/MovieMatch.css';
 
-
-
-
 const API_KEY = '44d4972f66d435a74e47ff73bed7d208';
-const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc`;
+const MOVIE_API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc`;
 
-const MovieMatch = () => {
+// Helper function to shuffle an array
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+const MovieRating = () => {
   const [movies, setMovies] = useState([]);
   const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
-  const [ratings, setRatings] = useState({});
+  const [ratings, setRatings] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get(API_URL);
-        setMovies(response.data.results.slice(0, 10)); // Get only 10 movies
+        const response = await axios.get(MOVIE_API_URL);
+        // Shuffle movies to randomize the order
+        setMovies(shuffleArray(response.data.results));
       } catch (error) {
         console.error('Error fetching movies:', error);
       }
@@ -28,49 +35,82 @@ const MovieMatch = () => {
   }, []);
 
   const handleRating = (rating) => {
-    const currentMovie = movies[currentMovieIndex];
-    setRatings({ ...ratings, [currentMovie.id]: rating });
-    setCurrentMovieIndex(currentMovieIndex + 1);
+    setRatings((prevRatings) => [...prevRatings, { movie: movies[currentMovieIndex], rating }]);
+    if (currentMovieIndex < movies.length - 1) {
+      setCurrentMovieIndex((prevIndex) => prevIndex + 1);
+    } else {
+      fetchRecommendations();
+    }
+  };
+
+  const fetchRecommendations = async () => {
+    try {
+      const genreCounts = {};
+      ratings.forEach((rating) => {
+        rating.movie.genre_ids.forEach((genre) => {
+          genreCounts[genre] = (genreCounts[genre] || 0) + 1;
+        });
+      });
+      const favoriteGenre = Object.keys(genreCounts).reduce((a, b) => (genreCounts[a] > genreCounts[b] ? a : b));
+
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${favoriteGenre}`
+      );
+      // Shuffle recommendations to randomize the order
+      setRecommendations(shuffleArray(response.data.results.slice(0, 3)));
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+    }
   };
 
   const currentMovie = movies[currentMovieIndex];
 
   return (
-    <div className="movie-match-container">
-      {currentMovie ? (
-        <>
-          <h2>Calculating your taste...</h2>
-          <TransitionGroup>
-            <CSSTransition
-              key={currentMovie.id}
-              timeout={300}
-              classNames="movie"
-            >
-              <div className="movie-card">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${currentMovie.poster_path}`}
-                  alt={currentMovie.title}
-                />
-                <h3>{currentMovie.title}</h3>
-                <p>{currentMovie.release_date.split('-')[0]}</p>
-              </div>
-            </CSSTransition>
-          </TransitionGroup>
+    <div className="movie-rating">
+      <header className="header">
+        <div className="logo">ScreenSurf</div>
+        <nav className="nav-menu">
+          <a href="/home">Home</a>
+          <a href="/Browse">Browse</a>
+          <a href="/MovieMatch">MovieMatch</a>
+          <a href="/more">More</a>
+        </nav>
+        <div className="user-profile">
+          <a href="/login">Login</a>
+        </div>
+      </header>
+
+      {currentMovie && (
+        <div className="movie-container">
+          <img src={`https://image.tmdb.org/t/p/w500${currentMovie.poster_path}`} alt={currentMovie.title} />
           <div className="rating-buttons">
-            <button className="rating-button awful" onClick={() => handleRating('awful')}>Awful</button>
-            <button className="rating-button meh" onClick={() => handleRating('meh')}>Meh</button>
-            <button className="rating-button good" onClick={() => handleRating('good')}>Good</button>
-            <button className="rating-button amazing" onClick={() => handleRating('amazing')}>Amazing</button>
+            <button className="awful" onClick={() => handleRating('awful')}>Awful</button>
+            <button className="meh" onClick={() => handleRating('meh')}>Meh</button>
+            <button className="good" onClick={() => handleRating('good')}>Good</button>
+            <button className="amazing" onClick={() => handleRating('amazing')}>Amazing</button>
           </div>
-          <button className="havenotseen-button" onClick={() => handleRating('havenotseen')}>
-            Haven't Seen
-          </button>
-        </>
-      ) : (
-        <h2>No more movies to rate!</h2>
+        </div>
+      )}
+
+      {recommendations.length > 0 && (
+        <div className="recommendations">
+          <h2>Your Recommendations</h2>
+          <ul>
+            {recommendations.map((movie) => (
+              <li key={movie.id} className="recommendation-item">
+                <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+                <div>
+                  <h3>{movie.title}</h3>
+                  <p>{movie.overview}</p>
+                  <div className="rating">Rating: {movie.vote_average}</div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );
 };
 
-export default MovieMatch;
+export default MovieRating;

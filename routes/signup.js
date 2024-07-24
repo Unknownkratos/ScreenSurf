@@ -2,12 +2,6 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 
-// GET request to render the signup form
-router.get('/', (req, res) => {
-  console.log("Rendering signup form");
-  res.render('signup'); // This renders signup.pug
-});
-
 // POST request to handle form submission
 router.post('/', async (req, res) => {
   const { username, password } = req.body;

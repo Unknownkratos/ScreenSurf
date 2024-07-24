@@ -1,146 +1,166 @@
-/* src/MovieMatch.css */
-
-/* Container for movie cards */
-.movie-match-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #121212;
-  color: white;
-  height: 100vh;
-  justify-content: center;
-  padding: 20px;
+/* src/styles/MovieRating.css */
+body {
+  background-color: #141414;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-/* Title styling */
-h2 {
+/* NavBar styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed; /* Make sure the navbar is fixed at the top */
+  top: 0; /* Position at the very top of the page */
+  left: 0;
+  right: 0; /* Ensure it spans the entire width of the viewport */
+  padding: 10px 20px;
+  background-color: #001f3f;
+  z-index: 1000; /* Make sure it stays above other content */
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #7FDBFF;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+}
+
+.nav-menu a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+.nav-menu a:hover {
+  color: #7FDBFF;
+}
+
+.user-profile a {
+  margin-left: 15px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.user-profile a:hover {
+  color: #7FDBFF;
+}
+
+.movie-rating {
+  text-align: center;
+  padding: 20px;
+  padding-top: 70px; /* Add padding at the top to ensure content is not hidden behind the fixed navbar */
+}
+
+.movie-container {
+  display: inline-block;
+  text-align: center;
   margin-bottom: 20px;
-  font-size: 1.5em;
-  font-weight: 300;
-  color: #888;
 }
 
-/* Styling for each movie card */
-.movie-card {
+.movie-container img {
+  width: 300px;
+  height: 450px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.movie-container h2 {
+  margin: 20px 0 10px;
+  font-size: 24px;
+}
+
+.rating-buttons {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.rating-buttons button {
+  width: 70px;
+  height: 70px;
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  display: flex;
   align-items: center;
-  background-color: #333;
+  justify-content: center;
+}
+
+.rating-buttons button.awful {
+  background-color: #3a3f44;
+}
+
+.rating-buttons button.meh {
+  background-color: #8c7b6b;
+}
+
+.rating-buttons button.good {
+  background-color: #f5a623;
+}
+
+.rating-buttons button.amazing {
+  background-color: #d9534f;
+}
+
+.rating-buttons button:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+.recommendations {
+  text-align: center;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
-  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-/* Movie poster styling */
-.movie-card img {
+.recommendations h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.recommendation-item {
+  display: inline-block;
   width: 200px;
+  margin: 0 10px;
+  text-align: left;
+}
+
+.recommendation-item img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
   border-radius: 10px;
-  margin-bottom: 10px;
-  transition: transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Scale movie poster on hover */
-.movie-card:hover img {
-  transform: scale(1.05);
-}
-
-/* Movie title styling */
-.movie-card h3 {
+.recommendation-item h3 {
+  font-size: 18px;
   margin: 10px 0 5px;
 }
 
-/* Movie description styling */
-.movie-card p {
-  margin: 0;
+.recommendation-item p {
   font-size: 14px;
-  color: #ccc;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Container for rating buttons */
-.rating-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-/* Styling for rating buttons */
-.rating-button {
-  width: 60px; /* Adjust size as needed */
-  height: 60px; /* Adjust size as needed */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  color: white;
-  font-size: 0.8em;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.awful {
-  background-color: #ff4c4c;
-}
-
-.meh {
-  background-color: #b0b0b0;
-}
-
-.good {
-  background-color: #ffd700;
-}
-
-.amazing {
-  background-color: #ffa500;
-}
-
-/* Hover effect for rating buttons */
-.rating-button:hover {
-  transform: scale(1.1);
-}
-
-/* Styling for "Haven't Seen" button */
-.havenotseen-button {
-  width: 60px; /* Adjust size as needed */
-  height: 60px; /* Adjust size as needed */
-  border-radius: 50%;
-  background-color: #444;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-/* Hover effect for "Haven't Seen" button */
-.havenotseen-button:hover {
-  transform: scale(1.1);
-}
-
-/* Animation classes for movie items */
-.movie-enter {
-  opacity: 0;
-  transform: scale(0.9);
-}
-
-.movie-enter-active {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.movie-exit {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.movie-exit-active {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 300ms, transform 300ms;
+.recommendation-item .rating {
+  margin-top: 5px;
+  font-size: 14px;
 }
