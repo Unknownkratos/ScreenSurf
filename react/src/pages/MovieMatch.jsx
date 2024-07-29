@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../styles/MovieMatch.css';
 
-const API_KEY = '44d4972f66d435a74e47ff73bed7d208';
+const API_KEY = 'apikey';
 const MOVIE_API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc`;
 
 // Helper function to shuffle an array

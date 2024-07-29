@@ -1,34 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const User = require('../models/User'); // Ensure this path is correct
+const bcrypt = require('bcrypt'); // For password hashing
 
-// GET request to render the login form
-router.get('/', (req, res) => {
-  res.render('login'); // Render login.pug
-});
-
-// POST request to handle login form submission
+// POST request to handle login
 router.post('/', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password } = req.body; // Expect username
 
   try {
-    // Find user by username
+    // Find the user
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(401).send('Invalid username or password'); // Unauthorized
     }
 
-    // Compare passwords
-    const isMatch = await user.comparePassword(password);
+    // Check if the password matches
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).send('Invalid password');
+      return res.status(401).send('Invalid username or password'); // Unauthorized
     }
 
-    // If login is successful, redirect to home page with username
-    res.render('home', { username }); // Render home.pug with username
+    // Login successful
+    res.status(200).send('Login successful!');
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error'); // Send 500 error response
+    console.error("Error logging in user:", err);
+    res.status(500).send('Error logging in user');
   }
 });
 

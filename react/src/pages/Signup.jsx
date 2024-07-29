@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/Signup.css'; // Ensure path is correct
+import '../styles/Signup.css'; // Ensure the path is correct
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -16,7 +16,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch('/api/signup', {
+      const response = await fetch('http://localhost:5000/api/signup', { // Ensure this matches your Express route
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,11 +24,18 @@ const Signup = () => {
         body: JSON.stringify({ username, password }),
       });
 
+      const responseData = await response.text(); // Read the response text
+
       if (response.ok) {
         alert('Signup successful!');
+        // Optionally, you can redirect the user or clear the form here
+        setUsername('');
+        setPassword('');
+        setConfirmPassword('');
+      } else if (response.status === 400) {
+        alert(`Signup failed: ${responseData}`); // Handle known error like username already taken
       } else {
-        const errorText = await response.text();
-        alert(`Signup failed: ${errorText}`);
+        alert(`Signup failed: ${responseData}`); // Handle other errors
       }
     } catch (error) {
       console.error('Error:', error);

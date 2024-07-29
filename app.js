@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
+
+// Import routes
 const signupRoutes = require('./routes/signup');
 const loginRoutes = require('./routes/login');
 const homeRoutes = require('./routes/home');
-const path = require('path');
 
 const app = express();
 
@@ -11,14 +13,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Set up the view engine if needed (e.g., Pug for server-rendered views)
-// app.set('view engine', 'pug');
-// app.set('views', path.join(__dirname, 'views'));
-
 // MongoDB connection
 mongoose.connect('mongodb://127.0.0.1:27017/ScreenSurf', {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 }).then(() => {
   console.log('Connected to MongoDB');
 }).catch(err => {
@@ -26,9 +24,9 @@ mongoose.connect('mongodb://127.0.0.1:27017/ScreenSurf', {
 });
 
 // API routes
-app.use('/api/signup', signupRoutes); // Handle signup requests
-app.use('/api/login', loginRoutes);   // Handle login requests
-app.use('/api/home', homeRoutes);     // Handle home requests
+app.use('/api/signup', signupRoutes); // Route for signup
+app.use('/api/login', loginRoutes);   // Route for login
+app.use('/api/home', homeRoutes);     // Route for home (if needed)
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../client/build')));
@@ -36,6 +34,11 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 // Serve React app for any route not matched by API
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;

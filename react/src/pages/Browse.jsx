@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../styles/Browse.css';
 
-const API_KEY = '44d4972f66d435a74e47ff73bed7d208'; // Replace with your actual API key
+const API_KEY = 'apikey'; // Replace with your actual API key
 const API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc`;
 
 const Browse = () => {

@@ -4,7 +4,7 @@
 
   const Home = () => {
     const [movies, setMovies] = useState([]);
-    const API_KEY = '44d4972f66d435a74e47ff73bed7d208'; // Replace with your actual API key
+    const API_KEY = 'apikey'; // Replace with your actual API key
 
     useEffect(() => {
       // Fetch movies from MovieDB API
