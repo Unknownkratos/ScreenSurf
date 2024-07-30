@@ -1,3 +1,4 @@
+// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -6,6 +7,7 @@ const path = require('path');
 const signupRoutes = require('./routes/signup');
 const loginRoutes = require('./routes/login');
 const homeRoutes = require('./routes/home');
+const userProfileRoutes = require('./routes/userprofile'); // Import user profile routes
 
 const app = express();
 
@@ -27,6 +29,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/ScreenSurf', {
 app.use('/api/signup', signupRoutes); // Route for signup
 app.use('/api/login', loginRoutes);   // Route for login
 app.use('/api/home', homeRoutes);     // Route for home (if needed)
+app.use('/api', userProfileRoutes);   // Route for user profile
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../client/build')));

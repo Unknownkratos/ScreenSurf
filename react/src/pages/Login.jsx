@@ -1,5 +1,6 @@
+// Login.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FormInput from '../Components/FormInput'; // Adjust path if necessary
 import '../styles/Login.css'; // Ensure to import the CSS file
 
@@ -7,6 +8,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,8 +26,7 @@ const Login = () => {
       const responseData = await response.text(); // Read the response text
 
       if (response.ok) {
-        alert('Login successful!');
-        // Optionally, redirect user to another page or handle successful login here
+        navigate('/home'); // Redirect to homepage
       } else {
         setError(responseData); // Set error message from server response
       }
@@ -81,4 +82,3 @@ const Login = () => {
 };
 
 export default Login;
-  

@@ -52,15 +52,28 @@ html, body {
   color: #7FDBFF;
 }
 
-.user-profile a {
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-right a {
   margin-left: 15px;
   color: #fff;
   text-decoration: none;
   font-weight: bold;
 }
 
-.user-profile a:hover {
+.header-right a:hover {
   color: #7FDBFF;
+}
+
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: 15px; /* Add some space between the icon and other elements */
 }
 
 .hero-banner {

@@ -1,3 +1,4 @@
+// src/Components/UserProfile.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/UserProfile.css'; // Ensure the path is correct
@@ -44,7 +45,7 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="user-profile">
+    <div className="user-profile-page">
       <header className="header">
         <div className="logo">ScreenSurf</div>
         <nav className="nav-menu">
