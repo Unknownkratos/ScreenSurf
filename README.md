@@ -33,20 +33,23 @@ ScreenSurf is a web application that provides personalized movie recommendations
 3.Run the app:
 
       npm start
+      
+## Usage
+1. Register or log in to access personalized movie recommendations.
+2. Browse recommended movies or search for specific titles.
+3. Click on a movie to view detailed information.
 
-Usage
+## Project Structure
+- **/client**: Contains the React frontend.
+- **/server**: Contains the Express backend and database connection.
 
-Register or log in to access personalized movie recommendations.
-Browse recommended movies or search for specific titles.
-Click on a movie to view detailed information.
-
-Project Structure
-/react: Contains the React frontend.
-/server: Contains the Express backend and database connection.
-
-Contributing
+## Contributing
 Feel free to fork this repository and make contributions. Submit a pull request with any improvements.
 
-
-License
+## License
 This project is open-source and available under the MIT License.
+
+---
+
+Enjoy discovering your next favorite movie with *ScreenSurf*!
+
