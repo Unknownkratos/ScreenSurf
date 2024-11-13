@@ -21,32 +21,16 @@ ScreenSurf is a web application that provides personalized movie recommendations
    git clone https://github.com/Unknownkratos/ScreenSurf.git
    cd ScreenSurf
 Install dependencies:
+   ```bash
+   Copy code
+   npm install
 
-bash
-Copy code
-npm install
+
 Environment Variables: Create a .env file in the root directory and add:
-
 plaintext
 Copy code
 DB_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 API_KEY=your_dbmovies_api_key
-Run the app:
 
-bash
-Copy code
-npm start
-Usage
-Register or log in to access personalized movie recommendations.
-Browse recommended movies or search for specific titles.
-Click on a movie to view detailed information.
-Project Structure
-/react: Contains the React frontend.
-/server: Contains the Express backend and database connection.
-Contributing
-Feel free to fork this repository and make contributions. Submit a pull request with any improvements.
-
-License
-This project is open-source and available under the MIT License.
 
