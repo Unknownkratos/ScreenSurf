@@ -23,7 +23,6 @@ ScreenSurf is a web application that provides personalized movie recommendations
    cd ScreenSurf
 2.Install dependencies and set environment variables:
 
-      ```bash
       npm install
       Create a .env file in the root directory and add:
 
@@ -40,11 +39,14 @@ Usage
 Register or log in to access personalized movie recommendations.
 Browse recommended movies or search for specific titles.
 Click on a movie to view detailed information.
+
 Project Structure
 /react: Contains the React frontend.
 /server: Contains the Express backend and database connection.
+
 Contributing
 Feel free to fork this repository and make contributions. Submit a pull request with any improvements.
+
 
 License
 This project is open-source and available under the MIT License.
