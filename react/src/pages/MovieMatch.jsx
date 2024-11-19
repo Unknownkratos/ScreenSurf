@@ -24,7 +24,6 @@ const MovieRating = () => {
     const fetchMovies = async () => {
       try {
         const response = await axios.get(MOVIE_API_URL);
-        // Shuffle movies to randomize the order
         setMovies(shuffleArray(response.data.results));
       } catch (error) {
         console.error('Error fetching movies:', error);
@@ -56,7 +55,6 @@ const MovieRating = () => {
       const response = await axios.get(
         `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${favoriteGenre}`
       );
-      // Shuffle recommendations to randomize the order
       setRecommendations(shuffleArray(response.data.results.slice(0, 3)));
     } catch (error) {
       console.error('Error fetching recommendations:', error);
@@ -82,12 +80,24 @@ const MovieRating = () => {
 
       {currentMovie && (
         <div className="movie-container">
-          <img src={`https://image.tmdb.org/t/p/w500${currentMovie.poster_path}`} alt={currentMovie.title} />
+          <img
+            src={`https://image.tmdb.org/t/p/w500${currentMovie.poster_path}`}
+            alt={currentMovie.title}
+            className="movie-poster"
+          />
           <div className="rating-buttons">
-            <button className="awful" onClick={() => handleRating('awful')}>Awful</button>
-            <button className="meh" onClick={() => handleRating('meh')}>Meh</button>
-            <button className="good" onClick={() => handleRating('good')}>Good</button>
-            <button className="amazing" onClick={() => handleRating('amazing')}>Amazing</button>
+            <button className="rating-btn awful" onClick={() => handleRating('awful')}>
+              Awful
+            </button>
+            <button className="rating-btn meh" onClick={() => handleRating('meh')}>
+              Meh
+            </button>
+            <button className="rating-btn good" onClick={() => handleRating('good')}>
+              Good
+            </button>
+            <button className="rating-btn amazing" onClick={() => handleRating('amazing')}>
+              Amazing
+            </button>
           </div>
         </div>
       )}
@@ -95,18 +105,22 @@ const MovieRating = () => {
       {recommendations.length > 0 && (
         <div className="recommendations">
           <h2>Your Recommendations</h2>
-          <ul>
+          <div className="recommendation-list">
             {recommendations.map((movie) => (
-              <li key={movie.id} className="recommendation-item">
-                <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
-                <div>
+              <div key={movie.id} className="recommendation-item">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className="recommendation-poster"
+                />
+                <div className="recommendation-info">
                   <h3>{movie.title}</h3>
                   <p>{movie.overview}</p>
                   <div className="rating">Rating: {movie.vote_average}</div>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
     </div>

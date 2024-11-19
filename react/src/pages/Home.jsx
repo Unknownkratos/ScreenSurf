@@ -12,7 +12,7 @@ const Home = () => {
     // Fetch movies from MovieDB API
     fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`)
       .then(response => response.json())
-      .then(data => setMovies(data.results.slice(0, 6))); // Fetch only the first 6 movies
+      .then(data => setMovies(data.results.slice(0, 9))); // Fetch only the first 6 movies
   }, []);
 
   return (
