@@ -6,11 +6,11 @@ import ProfilePic from '../assets/pfp.png'; // Import your profile picture
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
-  const API_KEY = 'apikey'; // Replace with your actual API key
+  const api_key = import.meta.env.VITE_TMDB_API_KEY || 'dcce6d555b2e844ae0baef071ef69d93'; // Falls back to hardcoded key if env var not set
 
   useEffect(() => {
     // Fetch movies from MovieDB API
-    fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`)
+    fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${api_key}`)
       .then(response => response.json())
       .then(data => setMovies(data.results.slice(0, 9))); // Fetch only the first 6 movies
   }, []);

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../styles/MovieMatch.css';
 
-const API_KEY = 'apikey';
-const MOVIE_API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc`;
+const api_key = import.meta.env.VITE_TMDB_API_KEY || 'dcce6d555b2e844ae0baef071ef69d93';
+const MOVIE_API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&sort_by=popularity.desc`;
 
 // Helper function to shuffle an array
 const shuffleArray = (array) => {
@@ -53,7 +53,7 @@ const MovieRating = () => {
       const favoriteGenre = Object.keys(genreCounts).reduce((a, b) => (genreCounts[a] > genreCounts[b] ? a : b));
 
       const response = await axios.get(
-        `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${favoriteGenre}`
+        `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=${favoriteGenre}`
       );
       setRecommendations(shuffleArray(response.data.results.slice(0, 3)));
     } catch (error) {

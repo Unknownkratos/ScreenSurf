@@ -5,7 +5,7 @@ import '../styles/Browse.css';
 import MovieItem from './MovieItem';
 import Pagination from './Pagination';
 
-const API_KEY = 'apikey'; // Replace with your actual API key
+const api_key = import.meta.env.VITE_TMDB_API_KEY || 'dcce6d555b2e844ae0baef071ef69d93'; // Falls back to hardcoded key if env var not set
 const API_URL = 'https://api.themoviedb.org/3/discover/movie';
 
 const Browse = () => {
@@ -20,7 +20,7 @@ const Browse = () => {
     try {
       const response = await axios.get(API_URL, {
         params: {
-          api_key: API_KEY,
+          api_key: api_key,
           sort_by: 'popularity.desc',
           page: pageNumber,
         },
