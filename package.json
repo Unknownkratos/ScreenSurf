@@ -1,11 +1,13 @@
 {
-  "name": "me",
+  "name": "screensurf",
   "version": "1.0.0",
   "license": "ISC",
   "scripts": {
-    "start": "vite",
-    "build": "vite build",
-    "dev": "vite"
+    "start": "node server.js",
+    "dev:server": "nodemon server.js",
+    "dev:client": "cd react && npm run dev",
+    "build": "cd react && npm install && npm run build",
+    "install:all": "npm install && cd react && npm install"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -13,15 +15,9 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.0",
-    "pug": "^3.0.3",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "vite": "^4.0.0"
+    "pug": "^3.0.3"
   },
   "devDependencies": {
-    "vite-plugin-react": "^1.0.0"
-  },
-  "engines": {
-    "node": "16.x"
+    "nodemon": "^3.0.0"
   }
 }
