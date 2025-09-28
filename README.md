@@ -28,7 +28,7 @@ ScreenSurf is a web application that provides personalized movie recommendations
 
       DB_URI=your_mongodb_uri
       JWT_SECRET=your_jwt_secret
-      API_KEY=your_dbmovies_api_key
+      api_key=your_dbmovies_api_key
 
 3.Run the app:
 

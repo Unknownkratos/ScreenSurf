@@ -1,0 +1,30 @@
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.skeleton-card__poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-lg);
+}
+
+.skeleton-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+}
+
+.skeleton-card__title {
+  height: 20px;
+  width: 80%;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-card__subtitle {
+  height: 16px;
+  width: 60%;
+  border-radius: var(--radius-sm);
+}
