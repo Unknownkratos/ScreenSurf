@@ -1,0 +1,200 @@
+@import '../../styles/tokens.css';
+
+.skeleton-container {
+  width: 100%;
+}
+
+.skeleton-wrapper {
+  margin-bottom: var(--space-4);
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-base);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  animation: skeleton-shimmer 2s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Common Elements */
+.skeleton-line {
+  height: 12px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-2);
+}
+
+.skeleton-line:last-child {
+  margin-bottom: 0;
+}
+
+/* Card Skeleton */
+.skeleton-card {
+  padding: var(--space-4);
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 200px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-base);
+  margin-bottom: var(--space-3);
+}
+
+.skeleton-content {
+  padding: var(--space-2) 0;
+}
+
+.skeleton-title {
+  width: 70%;
+  height: 16px;
+}
+
+.skeleton-subtitle {
+  width: 50%;
+  height: 12px;
+  opacity: 0.7;
+}
+
+/* Movie Card Skeleton */
+.skeleton-movie-card {
+  aspect-ratio: 2/3;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-lg);
+}
+
+.skeleton-poster {
+  width: 100%;
+  height: 85%;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.skeleton-movie-info {
+  padding: var(--space-3);
+  height: 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.skeleton-movie-title {
+  width: 80%;
+  height: 14px;
+  margin-bottom: var(--space-1);
+}
+
+.skeleton-movie-meta {
+  width: 40%;
+  height: 10px;
+  opacity: 0.6;
+}
+
+/* List Item Skeleton */
+.skeleton-list-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-3);
+}
+
+.skeleton-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--color-bg-tertiary);
+  margin-right: var(--space-3);
+  flex-shrink: 0;
+}
+
+.skeleton-list-content {
+  flex: 1;
+}
+
+.skeleton-list-title {
+  width: 60%;
+  height: 14px;
+}
+
+.skeleton-list-subtitle {
+  width: 40%;
+  height: 10px;
+  opacity: 0.6;
+}
+
+/* Text Skeleton */
+.skeleton-text {
+  padding: var(--space-3);
+}
+
+/* Hero Skeleton */
+.skeleton-hero {
+  position: relative;
+  height: 400px;
+  background: var(--color-bg-tertiary);
+}
+
+.skeleton-hero-bg {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    var(--color-bg-secondary),
+    var(--color-bg-tertiary)
+  );
+}
+
+.skeleton-hero-content {
+  position: absolute;
+  bottom: var(--space-8);
+  left: var(--space-8);
+  right: var(--space-8);
+}
+
+.skeleton-hero-title {
+  width: 300px;
+  height: 32px;
+  margin-bottom: var(--space-3);
+}
+
+.skeleton-hero-subtitle {
+  width: 200px;
+  height: 20px;
+  margin-bottom: var(--space-5);
+  opacity: 0.7;
+}
+
+.skeleton-button {
+  width: 120px;
+  height: 40px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-base);
+}
+
+/* Default Skeleton */
+.skeleton-default {
+  width: 100%;
+  height: 100px;
+  background: var(--color-bg-tertiary);
+}

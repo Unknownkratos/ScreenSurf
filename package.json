@@ -10,12 +10,8 @@
     "install:all": "npm install && cd react && npm install"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.5.0",
-    "pug": "^3.0.3"
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.0"
