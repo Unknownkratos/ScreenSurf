@@ -68,7 +68,7 @@ const Home = () => {
     }
   };
 
-  const MovieCarousel = ({ movies, title, icon: Icon }) => {
+  const MovieCarousel = React.memo(({ movies, title, icon: Icon }) => {
     const [scrollPosition, setScrollPosition] = useState(0);
     const carouselRef = React.useRef(null);
 
@@ -124,7 +124,7 @@ const Home = () => {
                 className="carousel-item"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: index * 0.05, duration: 0.3 }}
               >
                 <Card 
                   movie={movie}
@@ -140,7 +140,7 @@ const Home = () => {
         </div>
       </motion.section>
     );
-  };
+  });
 
   if (loading) {
     return (

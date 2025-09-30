@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Play, Plus, Heart } from 'lucide-react';
 import './Card.css';
 
-const Card = ({ 
+const Card = React.memo(({ 
   movie,
   variant = 'default',
   showOverlay = true,
@@ -60,7 +60,6 @@ const Card = ({
       onHoverEnd={() => setIsHovered(false)}
       onClick={onClick}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
-      layout
     >
       <div className="card-image-wrapper">
         {!imageLoaded && (
@@ -158,6 +157,6 @@ const Card = ({
       )}
     </motion.div>
   );
-};
+});
 
 export default Card;
