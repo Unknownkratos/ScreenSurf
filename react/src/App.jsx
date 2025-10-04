@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Browse from './pages/Browse';
 import MovieMatch from './pages/MovieMatch';
 import MovieDetails from './pages/MovieDetails';
+import SavedMovies from './pages/SavedMovies';
 
 const App = () => (
   <Router>
@@ -14,6 +15,7 @@ const App = () => (
         <Route path="/browse" element={<Browse />} />
         <Route path="/moviematch" element={<MovieMatch />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
+        <Route path="/saved" element={<SavedMovies />} />
       </Routes>
     </div>
   </Router>

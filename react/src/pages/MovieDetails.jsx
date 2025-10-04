@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, Play, Plus, Heart, Star, Clock, Calendar, 
-  Globe, DollarSign, Film, Users, Award, TrendingUp 
+  ArrowLeft, Plus, Heart, Star, Clock, Calendar, 
+  Globe, DollarSign, Film, Users, Award, TrendingUp, Check, PlayCircle 
 } from 'lucide-react';
 import Navigation from '../components/ui/Navigation';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
+import { saveMovie, removeMovie, isMovieSaved } from '../utils/savedMovies';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import '../styles/MovieDetails.css';
 
@@ -21,13 +22,24 @@ const MovieDetails = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [isLiked, setIsLiked] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   
-  const api_key = import.meta.env.VITE_TMDB_API_KEY || 'dcce6d555b2e844ae0baef071ef69d93';
+  const api_key = import.meta.env.VITE_TMDB_API_KEY;
+  
+  if (!api_key) {
+    throw new Error('TMDB API key is not configured. Please set VITE_TMDB_API_KEY in your .env file');
+  }
 
   useEffect(() => {
     fetchMovieData();
     window.scrollTo(0, 0);
   }, [id]);
+  
+  useEffect(() => {
+    if (movie) {
+      setIsSaved(isMovieSaved(movie.id));
+    }
+  }, [movie]);
 
   const fetchMovieData = async () => {
     setLoading(true);
@@ -39,6 +51,20 @@ const MovieDetails = () => {
         fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${api_key}`)
       ]);
 
+      // Validate all responses
+      if (!movieRes.ok) {
+        throw new Error(`Failed to fetch movie: ${movieRes.status}`);
+      }
+      if (!creditsRes.ok) {
+        throw new Error(`Failed to fetch credits: ${creditsRes.status}`);
+      }
+      if (!similarRes.ok) {
+        throw new Error(`Failed to fetch similar movies: ${similarRes.status}`);
+      }
+      if (!videosRes.ok) {
+        throw new Error(`Failed to fetch videos: ${videosRes.status}`);
+      }
+
       const [movieData, creditsData, similarData, videosData] = await Promise.all([
         movieRes.json(),
         creditsRes.json(),
@@ -48,10 +74,14 @@ const MovieDetails = () => {
 
       setMovie(movieData);
       setCredits(creditsData);
-      setSimilar(similarData.results.slice(0, 12));
-      setVideos(videosData.results.filter(v => v.type === 'Trailer' || v.type === 'Teaser'));
+      setSimilar((similarData.results || []).slice(0, 12));
+      setVideos((videosData.results || []).filter(v => v.type === 'Trailer' || v.type === 'Teaser'));
     } catch (error) {
       console.error('Error fetching movie data:', error);
+      setMovie(null);
+      setCredits(null);
+      setSimilar([]);
+      setVideos([]);
     } finally {
       setLoading(false);
     }
@@ -76,6 +106,16 @@ const MovieDetails = () => {
     if (rating >= 8) return '#4ade80';
     if (rating >= 6) return '#facc15';
     return '#ef4444';
+  };
+  
+  const handleSaveMovie = () => {
+    if (isSaved) {
+      removeMovie(movie.id);
+      setIsSaved(false);
+    } else {
+      saveMovie(movie);
+      setIsSaved(true);
+    }
   };
 
   if (loading) {
@@ -108,11 +148,22 @@ const MovieDetails = () => {
       {/* Hero Section with Backdrop */}
       <section className="details-hero">
         <div className="hero-backdrop-container">
-          <img 
-            src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-            alt={movie.title}
-            className="hero-backdrop-image"
-          />
+          {movie.backdrop_path ? (
+            <img 
+              src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+              alt={movie.title}
+              className="hero-backdrop-image"
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
+            />
+          ) : (
+            <div className="hero-backdrop-placeholder" style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#1a1a2e'
+            }} />
+          )}
           <div className="hero-overlay"></div>
         </div>
         
@@ -133,9 +184,14 @@ const MovieDetails = () => {
               transition={{ duration: 0.6 }}
             >
               <img 
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
+                src={movie.poster_path 
+                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                  : 'https://via.placeholder.com/500x750/1a1a2e/FFE8DB?text=No+Poster'}
+                alt={movie.title || 'Movie Poster'}
                 className="movie-poster"
+                onError={(e) => {
+                  e.target.src = 'https://via.placeholder.com/500x750/1a1a2e/FFE8DB?text=Image+Error';
+                }}
               />
               {trailer && (
                 <a 
@@ -144,7 +200,7 @@ const MovieDetails = () => {
                   rel="noopener noreferrer"
                   className="watch-trailer-btn"
                 >
-                  <Play size={20} fill="white" />
+                  <PlayCircle size={20} />
                   Watch Trailer
                 </a>
               )}
@@ -164,7 +220,7 @@ const MovieDetails = () => {
               <div className="movie-meta">
                 <div className="rating-badge" style={{ color: getRatingColor(movie.vote_average) }}>
                   <Star size={18} fill="currentColor" />
-                  <span>{movie.vote_average.toFixed(1)}</span>
+                  <span>{movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}</span>
                 </div>
                 <span className="meta-item">
                   <Calendar size={16} />
@@ -192,18 +248,12 @@ const MovieDetails = () => {
               
               <div className="action-buttons">
                 <Button 
-                  variant="primary" 
+                  variant={isSaved ? "secondary" : "primary"} 
                   size="large"
-                  icon={<Play size={20} fill="white" />}
+                  icon={isSaved ? <Check size={20} /> : <Plus size={20} />}
+                  onClick={handleSaveMovie}
                 >
-                  Play Now
-                </Button>
-                <Button 
-                  variant="secondary" 
-                  size="large"
-                  icon={<Plus size={20} />}
-                >
-                  Add to List
+                  {isSaved ? 'Saved' : 'Save Movie'}
                 </Button>
                 <button 
                   className="like-button"
@@ -311,6 +361,9 @@ const MovieDetails = () => {
                                   src={`https://image.tmdb.org/t/p/w200${company.logo_path}`}
                                   alt={company.name}
                                   className="company-logo"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                  }}
                                 />
                               ) : (
                                 <div className="company-name">{company.name}</div>
@@ -371,6 +424,9 @@ const MovieDetails = () => {
                           src={`https://image.tmdb.org/t/p/w200${person.profile_path}`}
                           alt={person.name}
                           className="cast-photo"
+                          onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/200x300/1a1a2e/FFE8DB?text=No+Photo';
+                          }}
                         />
                       ) : (
                         <div className="cast-photo-placeholder">
@@ -421,7 +477,7 @@ const MovieDetails = () => {
                             alt={video.name}
                           />
                           <div className="play-overlay">
-                            <Play size={40} fill="white" />
+                            <PlayCircle size={40} />
                           </div>
                         </a>
                         <h4>{video.name}</h4>

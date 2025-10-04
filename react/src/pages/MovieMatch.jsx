@@ -15,7 +15,11 @@ import { useNavigate } from 'react-router-dom';
 import Navigation from '../components/ui/Navigation';
 import '../styles/MovieMatch.css';
 
-const api_key = import.meta.env.VITE_TMDB_API_KEY || 'dcce6d555b2e844ae0baef071ef69d93';
+const api_key = import.meta.env.VITE_TMDB_API_KEY;
+
+if (!api_key) {
+  throw new Error('TMDB API key is not configured. Please set VITE_TMDB_API_KEY in your .env file');
+}
 
 const MovieMatch = () => {
   const navigate = useNavigate();
@@ -48,6 +52,11 @@ const MovieMatch = () => {
     const fetchGenres = async () => {
       try {
         const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
         const data = await response.json();
         const genreMap = {};
         data.genres.forEach(genre => {
@@ -61,29 +70,27 @@ const MovieMatch = () => {
     fetchGenres();
   }, []);
 
-  // Fetch movies
+  // Fetch movies - reduced to 15 for better UX
   useEffect(() => {
     const fetchMovies = async () => {
       setLoading(true);
       try {
-        // Fetch multiple pages for variety
-        const pages = [1, 2, 3];
-        const allMovies = [];
-        
-        for (const page of pages) {
-          const response = await fetch(
-            `https://api.themoviedb.org/3/movie/popular?api_key=${api_key}&page=${page}`
-          );
-          const data = await response.json();
-          allMovies.push(...data.results);
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${api_key}&page=1`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        
+
+        const data = await response.json();
+
         // Filter out already seen movies
         const seenIds = [...likedMovies, ...passedMovies].map(m => m.id);
-        const unseenMovies = allMovies.filter(movie => !seenIds.includes(movie.id));
-        
-        // Shuffle movies
-        const shuffled = unseenMovies.sort(() => Math.random() - 0.5);
+        const unseenMovies = data.results.filter(movie => !seenIds.includes(movie.id));
+
+        // Shuffle and take only 8 movies for quick, focused matching
+        const shuffled = unseenMovies.sort(() => Math.random() - 0.5).slice(0, 8);
         setMovies(shuffled);
         setLoading(false);
       } catch (error) {
@@ -121,20 +128,31 @@ const MovieMatch = () => {
         localStorage.setItem('matchStats', JSON.stringify(newStats));
       }
       
-      setCurrentIndex(currentIndex + 1);
+      const newIndex = currentIndex + 1;
+      setCurrentIndex(newIndex);
       setSwipeDirection(null);
-      
-      // Check if we need recommendations - show after every 5 likes
-      if (direction === 'right') {
-        const totalLikes = likedMovies.length + 1;
-        if (totalLikes >= 5 && totalLikes % 5 === 0) {
-          generateRecommendations();
+
+      // Check if finished all movies
+      if (newIndex >= movies.length) {
+        // User finished all movies - show completion and navigate
+        if (direction === 'right') {
+          const totalLikes = likedMovies.length + 1;
+          if (totalLikes >= 3) {
+            // Generate recommendations and show completion
+            setTimeout(() => {
+              generateRecommendations();
+              setShowCelebration(true);
+            }, 500);
+          }
+        } else {
+          // Even if they passed, show completion
+          if (likedMovies.length >= 3) {
+            setTimeout(() => {
+              generateRecommendations();
+              setShowCelebration(true);
+            }, 500);
+          }
         }
-      }
-      
-      // Also show recommendations when running out of movies
-      if (currentIndex === movies.length - 1 && likedMovies.length >= 3) {
-        generateRecommendations();
       }
     }, 300);
   };
@@ -142,7 +160,7 @@ const MovieMatch = () => {
   // Generate recommendations based on liked movies
   const generateRecommendations = async () => {
     if (likedMovies.length === 0) return;
-    
+
     try {
       // Get most common genres from liked movies
       const genreCounts = {};
@@ -151,24 +169,29 @@ const MovieMatch = () => {
           genreCounts[genreId] = (genreCounts[genreId] || 0) + 1;
         });
       });
-      
+
       const topGenres = Object.entries(genreCounts)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 2)
         .map(([genreId]) => genreId);
-      
+
       if (topGenres.length > 0) {
         const response = await fetch(
           `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=${topGenres.join(',')}&sort_by=vote_average.desc&vote_count.gte=100`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
         const data = await response.json();
-        
+
         // Filter out already seen movies
         const seenIds = [...likedMovies, ...passedMovies].map(m => m.id);
         const newRecommendations = data.results
           .filter(movie => !seenIds.includes(movie.id))
           .slice(0, 6);
-        
+
         setRecommendations(newRecommendations);
         if (newRecommendations.length > 0) {
           setShowRecommendations(true);
@@ -183,8 +206,34 @@ const MovieMatch = () => {
   const resetMatches = () => {
     setCurrentIndex(0);
     setShowRecommendations(false);
-    // Refresh movies list
-    window.location.reload();
+    setShowCelebration(false);
+    setLoading(true);
+
+    // Re-fetch movies instead of page reload
+    const fetchMovies = async () => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${api_key}&page=${Math.floor(Math.random() * 5) + 1}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const seenIds = [...likedMovies, ...passedMovies].map(m => m.id);
+        const unseenMovies = data.results.filter(movie => !seenIds.includes(movie.id));
+        const shuffled = unseenMovies.sort(() => Math.random() - 0.5).slice(0, 8);
+
+        setMovies(shuffled);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
   };
 
   // Clear history
@@ -220,10 +269,10 @@ const MovieMatch = () => {
               <TrendingUp className="stat-icon" size={20} />
               <span>{Math.round((matchStats.liked / (matchStats.liked + matchStats.passed || 1)) * 100)}%</span>
             </div>
-            {likedMovies.length > 0 && likedMovies.length < 5 && (
+            {currentIndex < movies.length && (
               <div className="stat-item recommendation-progress">
                 <Sparkles size={20} />
-                <span>{5 - likedMovies.length} more likes for recommendations</span>
+                <span>{movies.length - currentIndex} movies remaining</span>
               </div>
             )}
           </div>
@@ -299,10 +348,12 @@ const MovieMatch = () => {
                             <Calendar size={16} />
                             {new Date(currentMovie.release_date).getFullYear()}
                           </span>
-                          <span className="meta-item">
-                            <Clock size={16} />
-                            {currentMovie.runtime || '120'} min
-                          </span>
+                          {currentMovie.runtime && (
+                            <span className="meta-item">
+                              <Clock size={16} />
+                              {currentMovie.runtime} min
+                            </span>
+                          )}
                         </div>
                         <div className="card-genres">
                           {currentMovie.genre_ids?.slice(0, 3).map(genreId => (
@@ -358,6 +409,64 @@ const MovieMatch = () => {
                 </motion.button>
               </div>
             </div>
+          ) : showCelebration ? (
+            <motion.div
+              className="completion-modal"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 200 }}
+            >
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 0.5, repeat: 3 }}
+              >
+                <Sparkles size={80} className="celebration-icon" />
+              </motion.div>
+              <h2>All Done!</h2>
+              <p>You've reviewed {movies.length} movies</p>
+              <div className="completion-stats">
+                <div className="completion-stat">
+                  <Heart size={24} />
+                  <span>{matchStats.liked} Liked</span>
+                </div>
+                <div className="completion-stat">
+                  <XIcon size={24} />
+                  <span>{matchStats.passed} Passed</span>
+                </div>
+              </div>
+              {recommendations.length > 0 ? (
+                <>
+                  <p className="completion-message">
+                    Based on your preferences, we've found {recommendations.length} perfect recommendations for you!
+                  </p>
+                  <motion.button
+                    className="view-recommendations-btn"
+                    onClick={() => {
+                      setShowCelebration(false);
+                      document.querySelector('.recommendations-section')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Sparkles size={20} />
+                    View Your Recommendations
+                  </motion.button>
+                </>
+              ) : (
+                <p className="completion-message">
+                  Like at least 3 movies to get personalized recommendations!
+                </p>
+              )}
+              <motion.button
+                className="reset-btn secondary"
+                onClick={resetMatches}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <RefreshCw size={20} />
+                Start New Session
+              </motion.button>
+            </motion.div>
           ) : (
             <div className="no-more-movies">
               <Sparkles size={60} className="no-more-icon" />

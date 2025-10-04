@@ -1,0 +1,204 @@
+.saved-movies {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f14 0%, #1a1a2e 100%);
+}
+
+.saved-movies-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 100px 20px 40px;
+}
+
+.saved-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.saved-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.saved-title svg {
+  color: #5682B1;
+}
+
+.saved-title h1 {
+  font-size: 2rem;
+  color: #FFE8DB;
+  margin: 0;
+}
+
+.saved-count {
+  background: rgba(86, 130, 177, 0.2);
+  color: #5682B1;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.saved-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0 15px;
+  transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #5682B1;
+}
+
+.search-box svg {
+  color: #888;
+  margin-right: 10px;
+}
+
+.search-input {
+  background: none;
+  border: none;
+  outline: none;
+  color: #FFE8DB;
+  padding: 10px 0;
+  width: 250px;
+  font-size: 0.95rem;
+}
+
+.search-input::placeholder {
+  color: #888;
+}
+
+.saved-movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.saved-movie-wrapper {
+  position: relative;
+}
+
+.saved-movie-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.saved-movie-actions button {
+  flex: 1;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #FFE8DB;
+}
+
+.empty-state svg {
+  color: #5682B1;
+  opacity: 0.3;
+  margin-bottom: 20px;
+}
+
+.empty-state h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #FFE8DB;
+}
+
+.empty-state p {
+  color: #888;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 30px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.modal-content h3 {
+  color: #FFE8DB;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+.modal-content p {
+  color: #888;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-actions button {
+  flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .saved-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .saved-title {
+    margin-bottom: 20px;
+  }
+  
+  .saved-actions {
+    flex-direction: column;
+  }
+  
+  .search-box {
+    width: 100%;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  .saved-movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+  }
+}

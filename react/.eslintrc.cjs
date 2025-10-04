@@ -17,5 +17,13 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'off',
+    'react/no-unescaped-entities': 'off',
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'react/display-name': 'off',
   },
+  globals: {
+    process: 'readonly'
+  }
 }

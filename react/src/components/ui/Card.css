@@ -49,6 +49,16 @@
   }
 }
 
+/* Saved button state */
+.overlay-btn.saved {
+  background: var(--color-success);
+  color: white;
+}
+
+.overlay-btn.saved:hover {
+  background: var(--color-success-dark, #3d7a3d);
+}
+
 .card-image {
   width: 100%;
   height: 100%;

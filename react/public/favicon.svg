@@ -1,0 +1,19 @@
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circular badge background -->
+  <circle cx="22" cy="22" r="20" fill="#5682B1"/>
+
+  <!-- Stylized S for Screen/Surf -->
+  <path d="M 16 14 Q 22 14, 26 18 Q 28 20, 28 22 Q 28 24, 26 26 Q 22 30, 16 30"
+        stroke="#FFE8DB"
+        stroke-width="3.5"
+        stroke-linecap="round"
+        fill="none"/>
+
+  <!-- Wave accent -->
+  <path d="M 12 22 Q 16 18, 20 22 T 28 22"
+        stroke="#FFE8DB"
+        stroke-width="2"
+        stroke-linecap="round"
+        fill="none"
+        opacity="0.5"/>
+</svg>

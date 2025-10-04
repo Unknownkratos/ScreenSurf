@@ -46,6 +46,25 @@
   transform: scale(1.05);
 }
 
+/* Saved Badge */
+.saved-btn {
+  position: relative;
+}
+
+.saved-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--color-accent);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 5px;
+  border-radius: 10px;
+  min-width: 16px;
+  text-align: center;
+}
+
 /* Desktop Menu */
 .nav-menu {
   display: flex;

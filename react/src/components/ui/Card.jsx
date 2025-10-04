@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Play, Plus, Heart } from 'lucide-react';
+import { Star, Plus, Heart, Check } from 'lucide-react';
+import { saveMovie, removeMovie, isMovieSaved } from '../../utils/savedMovies';
 import './Card.css';
 
 const Card = React.memo(({ 
@@ -8,7 +9,6 @@ const Card = React.memo(({
   variant = 'default',
   showOverlay = true,
   onClick,
-  onPlay,
   onAddToList,
   onLike,
   className = ''
@@ -16,11 +16,28 @@ const Card = React.memo(({
   const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  
+  useEffect(() => {
+    setIsSaved(isMovieSaved(movie.id));
+  }, [movie.id]);
 
   const handleLike = (e) => {
     e.stopPropagation();
     setIsLiked(!isLiked);
     onLike && onLike(movie);
+  };
+  
+  const handleAddToList = (e) => {
+    e.stopPropagation();
+    if (isSaved) {
+      removeMovie(movie.id);
+      setIsSaved(false);
+    } else {
+      saveMovie(movie);
+      setIsSaved(true);
+    }
+    onAddToList && onAddToList(movie);
   };
 
   const cardVariants = {
@@ -68,16 +85,22 @@ const Card = React.memo(({
           </div>
         )}
         <img
-          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-          alt={movie.title}
+          src={movie.poster_path 
+            ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+            : 'https://via.placeholder.com/500x750/1a1a2e/FFE8DB?text=No+Image'}
+          alt={movie.title || 'Movie Poster'}
           className={`card-image ${imageLoaded ? 'loaded' : ''}`}
           onLoad={() => setImageLoaded(true)}
+          onError={(e) => {
+            e.target.src = 'https://via.placeholder.com/500x750/1a1a2e/FFE8DB?text=Image+Error';
+            setImageLoaded(true);
+          }}
         />
         
         {/* Rating Badge */}
         <div className="card-rating" style={{ color: getRatingColor(movie.vote_average) }}>
           <Star size={14} fill="currentColor" />
-          <span>{movie.vote_average.toFixed(1)}</span>
+          <span>{movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}</span>
         </div>
 
         {/* Like Button */}
@@ -106,30 +129,17 @@ const Card = React.memo(({
               <div className="overlay-content">
                 <div className="overlay-actions">
                   <motion.button
-                    className="overlay-btn overlay-btn-play"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onPlay && onPlay(movie);
-                    }}
+                    className={`overlay-btn overlay-btn-primary ${isSaved ? 'saved' : ''}`}
+                    onClick={handleAddToList}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
+                    title={isSaved ? 'Remove from saved' : 'Save movie'}
                   >
-                    <Play size={24} fill="white" />
-                  </motion.button>
-                  <motion.button
-                    className="overlay-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onAddToList && onAddToList(movie);
-                    }}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <Plus size={24} />
+                    {isSaved ? <Check size={24} /> : <Plus size={24} />}
                   </motion.button>
                 </div>
                 <div className="overlay-info">
-                  <h3 className="overlay-title">{movie.title}</h3>
+                  <h3 className="overlay-title">{movie.title || 'Untitled'}</h3>
                   {movie.release_date && (
                     <p className="overlay-year">
                       {new Date(movie.release_date).getFullYear()}
@@ -147,7 +157,7 @@ const Card = React.memo(({
 
       {variant === 'detailed' && (
         <div className="card-details">
-          <h3 className="card-title">{movie.title}</h3>
+          <h3 className="card-title">{movie.title || 'Untitled'}</h3>
           <div className="card-meta">
             <span className="card-year">
               {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}

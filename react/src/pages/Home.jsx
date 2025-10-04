@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Info, ChevronLeft, ChevronRight, TrendingUp, Star, Clock } from 'lucide-react';
+import { Info, ChevronLeft, ChevronRight, TrendingUp, Star, Clock } from 'lucide-react';
 import Navigation from '../components/ui/Navigation';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
@@ -19,7 +19,11 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   
-  const api_key = import.meta.env.VITE_TMDB_API_KEY || 'dcce6d555b2e844ae0baef071ef69d93';
+  const api_key = import.meta.env.VITE_TMDB_API_KEY;
+  
+  if (!api_key) {
+    throw new Error('TMDB API key is not configured. Please set VITE_TMDB_API_KEY in your .env file');
+  }
 
   useEffect(() => {
     fetchMovies();
@@ -43,18 +47,34 @@ const Home = () => {
         fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${api_key}`)
       ]);
 
+      // Validate HTTP responses
+      if (!trendingRes.ok) {
+        throw new Error(`Failed to fetch trending movies: ${trendingRes.status}`);
+      }
+      if (!topRatedRes.ok) {
+        throw new Error(`Failed to fetch top rated movies: ${topRatedRes.status}`);
+      }
+      if (!upcomingRes.ok) {
+        throw new Error(`Failed to fetch upcoming movies: ${upcomingRes.status}`);
+      }
+
       const [trendingData, topRatedData, upcomingData] = await Promise.all([
         trendingRes.json(),
         topRatedRes.json(),
         upcomingRes.json()
       ]);
 
-      setTrendingMovies(trendingData.results);
-      setTopRatedMovies(topRatedData.results.slice(0, 10));
-      setUpcomingMovies(upcomingData.results.slice(0, 10));
-      setFeaturedMovie(trendingData.results[0]);
+      setTrendingMovies(trendingData.results || []);
+      setTopRatedMovies((topRatedData.results || []).slice(0, 10));
+      setUpcomingMovies((upcomingData.results || []).slice(0, 10));
+      setFeaturedMovie(trendingData.results?.[0] || null);
     } catch (error) {
       console.error('Error fetching movies:', error);
+      // Set empty arrays to prevent app crash
+      setTrendingMovies([]);
+      setTopRatedMovies([]);
+      setUpcomingMovies([]);
+      setFeaturedMovie(null);
     } finally {
       setLoading(false);
     }
@@ -130,9 +150,9 @@ const Home = () => {
                   movie={movie}
                   variant="default"
                   onClick={() => navigate(`/movie/${movie.id}`)}
-                  onPlay={(movie) => console.log('Play:', movie)}
-                  onAddToList={(movie) => console.log('Add to list:', movie)}
-                  onLike={(movie) => console.log('Like:', movie)}
+                  onPlay={(movie) => {}}
+                  onAddToList={(movie) => {}}
+                  onLike={(movie) => {}}
                 />
               </motion.div>
             ))}
@@ -175,7 +195,9 @@ const Home = () => {
               <div 
                 className="hero-backdrop"
                 style={{
-                  backgroundImage: `url(https://image.tmdb.org/t/p/original${currentHeroMovie.backdrop_path})`
+                  backgroundImage: currentHeroMovie.backdrop_path 
+                    ? `url(https://image.tmdb.org/t/p/original${currentHeroMovie.backdrop_path})`
+                    : 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
                 }}
               >
                 <div className="hero-gradient" />
@@ -193,7 +215,7 @@ const Home = () => {
                   <div className="hero-meta">
                     <span className="hero-rating">
                       <Star size={16} fill="currentColor" />
-                      {currentHeroMovie.vote_average.toFixed(1)}
+                      {currentHeroMovie.vote_average ? currentHeroMovie.vote_average.toFixed(1) : 'N/A'}
                     </span>
                     <span className="hero-year">
                       {new Date(currentHeroMovie.release_date).getFullYear()}
@@ -207,13 +229,6 @@ const Home = () => {
                   <div className="hero-actions">
                     <Button 
                       variant="primary" 
-                      size="large"
-                      icon={<Play size={20} fill="white" />}
-                    >
-                      Play Now
-                    </Button>
-                    <Button 
-                      variant="glass" 
                       size="large"
                       icon={<Info size={20} />}
                       onClick={() => navigate(`/movie/${currentHeroMovie.id}`)}

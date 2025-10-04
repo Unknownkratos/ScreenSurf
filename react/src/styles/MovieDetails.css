@@ -261,15 +261,19 @@
 .tabs-header {
   display: flex;
   gap: var(--space-2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(86, 130, 177, 0.1);
+  border: 1px solid rgba(86, 130, 177, 0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
   margin-bottom: var(--space-6);
   overflow-x: auto;
 }
 
 .tab-button {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-5);
   background: transparent;
   border: none;
+  border-radius: var(--radius-md);
   color: var(--color-text-secondary);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
@@ -281,20 +285,16 @@
 
 .tab-button:hover {
   color: var(--color-text-primary);
+  background: rgba(86, 130, 177, 0.15);
 }
 
 .tab-button.active {
-  color: var(--color-primary);
+  color: white;
+  background: var(--color-primary);
 }
 
 .tab-button.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--color-primary);
+  display: none;
 }
 
 .tab-content {
@@ -304,6 +304,10 @@
 /* Overview Tab */
 .overview-tab {
   animation: fadeIn 0.5s ease;
+  background: rgba(86, 130, 177, 0.08);
+  border: 1px solid rgba(86, 130, 177, 0.15);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
 }
 
 .overview-grid {
@@ -317,13 +321,16 @@
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   margin-bottom: var(--space-4);
-  color: var(--color-text-primary);
+  color: var(--color-primary);
 }
 
 .overview-main p {
-  line-height: 1.7;
-  color: var(--color-text-secondary);
+  line-height: 1.8;
+  color: var(--color-text-primary);
   margin-bottom: var(--space-6);
+  background: rgba(0, 0, 0, 0.3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
 }
 
 .production-companies {
@@ -335,12 +342,20 @@
 
 .company-item {
   padding: var(--space-3);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(86, 130, 177, 0.3);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 80px;
+  transition: all 0.3s ease;
+}
+
+.company-item:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(86, 130, 177, 0.3);
 }
 
 .company-logo {
@@ -358,7 +373,8 @@
 
 .detail-card {
   padding: var(--space-4);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(86, 130, 177, 0.3);
   border-radius: var(--radius-lg);
   backdrop-filter: blur(10px);
 }
@@ -371,13 +387,14 @@
 
 .detail-card dt {
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-secondary);
+  color: var(--color-primary);
   font-size: var(--font-size-sm);
 }
 
 .detail-card dd {
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 .detail-card a {
@@ -392,10 +409,18 @@
 }
 
 /* Cast Tab */
+.cast-tab {
+  background: rgba(86, 130, 177, 0.08);
+  border: 1px solid rgba(86, 130, 177, 0.15);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
 .cast-tab h3 {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   margin-bottom: var(--space-4);
+  color: var(--color-primary);
 }
 
 .cast-grid {
@@ -409,10 +434,16 @@
   text-align: center;
   cursor: pointer;
   transition: transform 0.3s ease;
+  background: rgba(0, 0, 0, 0.3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
 }
 
 .cast-card:hover {
   transform: translateY(-5px);
+  border-color: var(--color-primary);
+  background: rgba(86, 130, 177, 0.1);
 }
 
 .cast-photo {
@@ -456,8 +487,15 @@
 
 .crew-card {
   padding: var(--space-3);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(86, 130, 177, 0.2);
   border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.crew-card:hover {
+  background: rgba(86, 130, 177, 0.15);
+  border-color: var(--color-primary);
 }
 
 .crew-card h4 {
@@ -469,10 +507,18 @@
 
 .crew-card p {
   font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
+  opacity: 0.9;
 }
 
 /* Videos Tab */
+.videos-tab {
+  background: rgba(86, 130, 177, 0.08);
+  border: 1px solid rgba(86, 130, 177, 0.15);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
 .videos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -480,14 +526,17 @@
 }
 
 .video-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(86, 130, 177, 0.2);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .video-card:hover {
   transform: scale(1.02);
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(86, 130, 177, 0.3);
 }
 
 .video-thumbnail {
@@ -528,10 +577,18 @@
 .video-card p {
   padding: 0 var(--space-4) var(--space-3);
   font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
+  opacity: 0.8;
 }
 
 /* Similar Movies Tab */
+.similar-tab {
+  background: rgba(86, 130, 177, 0.08);
+  border: 1px solid rgba(86, 130, 177, 0.15);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
 .similar-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -540,9 +597,11 @@
 
 .no-content {
   text-align: center;
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   padding: var(--space-8);
   font-size: var(--font-size-lg);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-md);
 }
 
 /* Responsive Design */

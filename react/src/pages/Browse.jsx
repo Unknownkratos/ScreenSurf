@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { 
@@ -19,8 +19,12 @@ import LoadingSpinner from '../components/ui/LoadingSpinner';
 import SkeletonLoader from '../components/ui/SkeletonLoader';
 import '../styles/Browse.css';
 
-const api_key = import.meta.env.VITE_TMDB_API_KEY || 'dcce6d555b2e844ae0baef071ef69d93';
+const api_key = import.meta.env.VITE_TMDB_API_KEY;
 const API_URL = 'https://api.themoviedb.org/3';
+
+if (!api_key) {
+  throw new Error('TMDB API key is not configured. Please set VITE_TMDB_API_KEY in your .env file');
+}
 
 const GENRES = [
   { id: 28, name: 'Action' },
@@ -52,12 +56,14 @@ const SORT_OPTIONS = [
 
 const Browse = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
+  const MAX_MOVIES = 200; // Limit total movies to prevent memory issues
   
   // Filter states
   const [selectedGenres, setSelectedGenres] = useState([]);
@@ -69,8 +75,6 @@ const Browse = () => {
   const { ref, inView } = useInView({ threshold: 0 });
   
   const fetchMovies = useCallback(async (pageNumber, reset = false) => {
-    if (loading) return;
-    
     setLoading(true);
     try {
       let url = '';
@@ -92,34 +96,52 @@ const Browse = () => {
       }
 
       const response = await fetch(url);
-      const data = await response.json();
-      
-      if (reset) {
-        setMovies(data.results);
-      } else {
-        setMovies(prev => [...prev, ...data.results]);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      
-      setHasMore(pageNumber < data.total_pages);
+
+      const data = await response.json();
+
+      if (reset) {
+        setMovies(data.results || []);
+      } else {
+        setMovies(prev => {
+          const newMovies = [...prev, ...(data.results || [])];
+          // Limit total movies to prevent memory issues
+          return newMovies.slice(0, MAX_MOVIES);
+        });
+      }
+
+      // Stop loading more if we've reached the limit or no more pages
+      setHasMore(pageNumber < (data.total_pages || 0) && movies.length < MAX_MOVIES);
       setPage(pageNumber);
     } catch (error) {
       console.error('Error fetching movies:', error);
+      setMovies(reset ? [] : prev => prev);
+      setHasMore(false);
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, sortBy, selectedGenres, yearRange, ratingRange, loading]);
+  }, [searchQuery, sortBy, selectedGenres, yearRange, ratingRange]);
 
   useEffect(() => {
     setMovies([]);
     setPage(1);
+    setHasMore(true);
     fetchMovies(1, true);
-  }, [searchQuery, sortBy, selectedGenres, yearRange, ratingRange]);
+    
+    // Cleanup function to prevent memory leaks
+    return () => {
+      setMovies([]);
+    };
+  }, [searchQuery, sortBy, selectedGenres, yearRange, ratingRange, fetchMovies]);
 
   useEffect(() => {
     if (inView && hasMore && !loading) {
       fetchMovies(page + 1);
     }
-  }, [inView, hasMore, page]);
+  }, [inView, hasMore, page, loading, fetchMovies]);
 
   const toggleGenre = (genreId) => {
     setSelectedGenres(prev =>
@@ -203,7 +225,12 @@ const Browse = () => {
                     min="1900"
                     max={new Date().getFullYear()}
                     value={yearRange.min}
-                    onChange={(e) => setYearRange(prev => ({ ...prev, min: parseInt(e.target.value) }))}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value);
+                      if (!isNaN(value)) {
+                        setYearRange(prev => ({ ...prev, min: value }));
+                      }
+                    }}
                     className="range-input"
                   />
                   <span>to</span>
@@ -212,7 +239,12 @@ const Browse = () => {
                     min="1900"
                     max={new Date().getFullYear()}
                     value={yearRange.max}
-                    onChange={(e) => setYearRange(prev => ({ ...prev, max: parseInt(e.target.value) }))}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value);
+                      if (!isNaN(value)) {
+                        setYearRange(prev => ({ ...prev, max: value }));
+                      }
+                    }}
                     className="range-input"
                   />
                 </div>
@@ -228,12 +260,17 @@ const Browse = () => {
                     max="10"
                     step="0.5"
                     value={ratingRange.min}
-                    onChange={(e) => setRatingRange(prev => ({ ...prev, min: parseFloat(e.target.value) }))}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      if (!isNaN(value)) {
+                        setRatingRange(prev => ({ ...prev, min: value }));
+                      }
+                    }}
                     className="slider"
                   />
                   <div className="rating-values">
-                    <span>{ratingRange.min}</span>
-                    <span>{ratingRange.max}</span>
+                    <span>{ratingRange.min.toFixed(1)}</span>
+                    <span>{ratingRange.max.toFixed(1)}</span>
                   </div>
                   <input
                     type="range"
@@ -241,7 +278,12 @@ const Browse = () => {
                     max="10"
                     step="0.5"
                     value={ratingRange.max}
-                    onChange={(e) => setRatingRange(prev => ({ ...prev, max: parseFloat(e.target.value) }))}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      if (!isNaN(value)) {
+                        setRatingRange(prev => ({ ...prev, max: value }));
+                      }
+                    }}
                     className="slider"
                   />
                 </div>
@@ -332,6 +374,7 @@ const Browse = () => {
                   <Card 
                     movie={movie}
                     variant={viewMode === 'list' ? 'detailed' : 'default'}
+                    onClick={() => navigate(`/movie/${movie.id}`)}
                   />
                 </motion.div>
               ))}

@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  Menu, 
-  X, 
-  Home, 
-  Film, 
+import {
+  Search,
+  Menu,
+  X,
+  Home,
+  Film,
   Sparkles,
   Bookmark
 } from 'lucide-react';
+import { getSavedMoviesCount } from '../../utils/savedMovies';
+import Logo from './Logo';
 import './Navigation.css';
 
 const Navigation = () => {
@@ -17,6 +19,7 @@ const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [savedCount, setSavedCount] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -28,6 +31,11 @@ const Navigation = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
+  useEffect(() => {
+    // Update saved count when location changes
+    setSavedCount(getSavedMoviesCount());
+  }, [location]);
 
   const navItems = [
     { path: '/home', label: 'Home', icon: Home },
@@ -55,13 +63,13 @@ const Navigation = () => {
       <nav className="nav-container">
         {/* Logo */}
         <Link to="/home" className="nav-logo">
-          <motion.span
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            ScreenSurf
-          </motion.span>
+            <Logo variant="full" style={{ height: '40px', width: 'auto' }} />
+          </motion.div>
         </Link>
 
         {/* Desktop Navigation */}
@@ -103,15 +111,20 @@ const Navigation = () => {
             <Search size={20} />
           </motion.button>
 
-          {/* Favorites/Watchlist */}
-          <motion.button
-            className="nav-icon-btn"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            title="My Favorites"
-          >
-            <Bookmark size={20} />
-          </motion.button>
+          {/* Saved Movies Quick Access */}
+          <Link to="/saved">
+            <motion.button
+              className="nav-icon-btn saved-btn"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              title="My Saved Movies"
+            >
+              <Bookmark size={20} />
+              {savedCount > 0 && (
+                <span className="saved-badge">{savedCount}</span>
+              )}
+            </motion.button>
+          </Link>
 
           {/* Mobile Menu Toggle */}
           <motion.button
