@@ -17,14 +17,11 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import SkeletonLoader from '../components/ui/SkeletonLoader';
+import ApiConfigError from '../components/ui/ApiConfigError';
 import '../styles/Browse.css';
 
 const api_key = import.meta.env.VITE_TMDB_API_KEY;
 const API_URL = 'https://api.themoviedb.org/3';
-
-if (!api_key) {
-  throw new Error('TMDB API key is not configured. Please set VITE_TMDB_API_KEY in your .env file');
-}
 
 const GENRES = [
   { id: 28, name: 'Action' },
@@ -55,6 +52,11 @@ const SORT_OPTIONS = [
 ];
 
 const Browse = () => {
+  // Early return with error UI if API key is missing
+  if (!api_key) {
+    return <ApiConfigError />;
+  }
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
@@ -64,13 +66,13 @@ const Browse = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const MAX_MOVIES = 200; // Limit total movies to prevent memory issues
-  
+
   // Filter states
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [sortBy, setSortBy] = useState('popularity.desc');
   const [yearRange, setYearRange] = useState({ min: 1990, max: new Date().getFullYear() });
   const [ratingRange, setRatingRange] = useState({ min: 0, max: 10 });
-  
+
   const searchQuery = searchParams.get('search');
   const { ref, inView } = useInView({ threshold: 0 });
   

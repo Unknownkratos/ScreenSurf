@@ -1,0 +1,122 @@
+.api-config-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  padding: 2rem;
+}
+
+.api-config-error .error-content {
+  max-width: 600px;
+  text-align: center;
+  color: #FFE8DB;
+}
+
+.api-config-error .error-icon {
+  color: #ff6b6b;
+  margin-bottom: 1.5rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.api-config-error h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #FFE8DB;
+}
+
+.api-config-error p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.api-config-error .setup-instructions {
+  background: #2a2a3e;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.api-config-error .setup-instructions h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #5682B1;
+}
+
+.api-config-error .setup-instructions ol {
+  margin-left: 1.5rem;
+  color: #ccc;
+}
+
+.api-config-error .setup-instructions li {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.api-config-error .setup-instructions a {
+  color: #5682B1;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.3s;
+}
+
+.api-config-error .setup-instructions a:hover {
+  color: #7fa3d1;
+  text-decoration: underline;
+}
+
+.api-config-error .setup-instructions code {
+  background: #1a1a2e;
+  color: #7fa3d1;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.api-config-error .setup-instructions pre {
+  background: #1a1a2e;
+  color: #7fa3d1;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.api-config-error .retry-button {
+  background: #5682B1;
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.api-config-error .retry-button:hover {
+  background: #4570A0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(86, 130, 177, 0.3);
+}
+
+.api-config-error .retry-button:active {
+  transform: translateY(0);
+}

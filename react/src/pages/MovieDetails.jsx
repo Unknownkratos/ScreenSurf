@@ -10,6 +10,7 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { saveMovie, removeMovie, isMovieSaved } from '../utils/savedMovies';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
+import ApiConfigError from '../components/ui/ApiConfigError';
 import '../styles/MovieDetails.css';
 
 const MovieDetails = () => {
@@ -23,11 +24,12 @@ const MovieDetails = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  
+
   const api_key = import.meta.env.VITE_TMDB_API_KEY;
-  
+
+  // Early return with error UI if API key is missing
   if (!api_key) {
-    throw new Error('TMDB API key is not configured. Please set VITE_TMDB_API_KEY in your .env file');
+    return <ApiConfigError />;
   }
 
   useEffect(() => {

@@ -13,15 +13,17 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navigation from '../components/ui/Navigation';
+import ApiConfigError from '../components/ui/ApiConfigError';
 import '../styles/MovieMatch.css';
 
 const api_key = import.meta.env.VITE_TMDB_API_KEY;
 
-if (!api_key) {
-  throw new Error('TMDB API key is not configured. Please set VITE_TMDB_API_KEY in your .env file');
-}
-
 const MovieMatch = () => {
+  // Early return with error UI if API key is missing
+  if (!api_key) {
+    return <ApiConfigError />;
+  }
+
   const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
